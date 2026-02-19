@@ -1230,10 +1230,6 @@
       <input type="text" id="cfgApiKey" placeholder="AIzaSy...">
     </div>
     <div class="form-group">
-      <label>Apps Script URL (para cadastro)</label>
-      <input type="text" id="cfgAppsScript" placeholder="https://script.google.com/macros/s/.../exec">
-    </div>
-    <div class="form-group">
       <label>Tema Visual</label>
       <div class="theme-picker" id="themePicker">
 
@@ -1341,10 +1337,9 @@ const DEFAULT_CONFIG = {
   SPREADSHEET_ID: '1An3DK05ecq7fWFerbuh6iwpi9iogOuBLrIlxhRhR0dk',
   // OAuth Client ID — necessário para o modo online (com login Google).
   // É seguro deixar aqui — não é um segredo.
-  OAUTH_CLIENT_ID: '932139155769-01fqbo62ud5otf8km6ur5cpqhkiv3dlu.apps.googleusercontent.com',      // ex: '1234567890-abc.apps.googleusercontent.com'
+  OAUTH_CLIENT_ID: '',      // ex: '1234567890-abc.apps.googleusercontent.com'
   // API Key — usada apenas no modo offline (file://), somente leitura.
   API_KEY: '',              // ex: 'AIzaSy...'
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzHOeYB5Sh8mQzjWq6F3sYyew5l1LCruguhdbSvMc8CBUs8d4Lr1FlYMSABVzx6EMM/exec',      // URL do Web App (Apps Script) para POST
   THEME: 'golden',          // tema visual ativo
 };
 
@@ -1409,10 +1404,7 @@ function initGoogleAuth() {
 
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CONFIG.OAUTH_CLIENT_ID,
-    // Read-only scope is enough for fetching data.
-    // The write path goes through Apps Script (which runs as the script owner),
-    // so we don't need a write scope here.
-    scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    scope: 'https://www.googleapis.com/auth/spreadsheets',
     callback: (response) => {
       if (response.error) {
         showLoginError('Falha ao autenticar: ' + response.error);
@@ -1759,11 +1751,6 @@ function showToast(msg, type = 'success') {
 
 // ─── Add term via Apps Script ───
 async function submitNewTerm() {
-  if (!CONFIG.APPS_SCRIPT_URL) {
-    showToast('Configure a URL do Apps Script primeiro.', 'error');
-    return;
-  }
-
   const payload = {
     sheet: document.getElementById('formSheet').value,
     original: document.getElementById('formOriginal').value.trim(),
@@ -1778,29 +1765,62 @@ async function submitNewTerm() {
     return;
   }
 
+  if (!accessToken) {
+    showToast('Não autenticado. Faça login novamente.', 'error');
+    return;
+  }
+
+  const doAppend = async () => {
+    const row = [
+      payload.original,
+      payload.traducao,
+      payload.info,
+      payload.filiacao,
+      payload.fonte,
+    ];
+    const range = encodeURIComponent(`'${payload.sheet}'`);
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ values: [row] }),
+      }
+    );
+    return res;
+  };
+
   try {
     document.getElementById('btnSubmitAdd').disabled = true;
     document.getElementById('btnSubmitAdd').textContent = 'Salvando…';
 
-    // Apps Script requires a "simple" CORS request to avoid a preflight that
-    // it cannot respond to. Omitting the Content-Type header (letting the
-    // browser default to text/plain) prevents the preflight while still
-    // delivering the full JSON body in e.postData.contents on the server.
-    const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
+    let res = await doAppend();
 
-    // Apps Script returns JSON with { success: true/false }
-    let result = { success: true };
-    try {
-      result = await res.json();
-    } catch (_) {
-      // opaque / non-JSON response — treat as success if HTTP was ok
-      if (!res.ok) result = { success: false, error: `HTTP ${res.status}` };
+    // Token expired or scope was readonly — silently refresh and retry once
+    if ((res.status === 401 || res.status === 403) && tokenClient) {
+      await new Promise((resolve, reject) => {
+        const origCallback = tokenClient.callback;
+        tokenClient.callback = (response) => {
+          tokenClient.callback = origCallback;
+          if (response.error) { reject(new Error(response.error)); return; }
+          accessToken = response.access_token;
+          resolve();
+        };
+        // prompt: '' = silent refresh if possible; falls back to consent popup
+        tokenClient.requestAccessToken({ prompt: '' });
+      });
+      res = await doAppend();
     }
 
-    if (!result.success) throw new Error(result.error || 'Resposta inesperada do servidor');
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      const msg = body?.error?.message || `HTTP ${res.status}`;
+      if (res.status === 403) throw new Error(`Sem permissão de escrita. Certifique-se de que a sua conta tem acesso de Editor. Detalhe: ${msg}`);
+      throw new Error(msg);
+    }
 
     // Add locally for immediate display
     allEntries.push({ ...payload });
@@ -1829,9 +1849,11 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 // ─── Add button state ───
 function updateAddButton() {
   const btn = document.getElementById('btnAdd');
-  const canAdd = !!CONFIG.APPS_SCRIPT_URL;
-  btn.disabled = !canAdd;
-  btn.title = canAdd ? 'Adicionar novo termo' : 'Configure a URL do Apps Script (⚙) para habilitar o cadastro';
+  // In offline (file://) mode the button is hidden entirely in init().
+  // In online mode it's always enabled once we reach this point — the
+  // write call itself will surface a 403 if the account is read-only.
+  btn.disabled = false;
+  btn.title = 'Adicionar novo termo';
 }
 
 // ─── Load glossary (called after sign-in) ───
@@ -1912,7 +1934,6 @@ function openConfigModal() {
   document.getElementById('cfgSpreadsheetId').value = CONFIG.SPREADSHEET_ID;
   document.getElementById('cfgClientId').value = CONFIG.OAUTH_CLIENT_ID;
   document.getElementById('cfgApiKey').value = CONFIG.API_KEY;
-  document.getElementById('cfgAppsScript').value = CONFIG.APPS_SCRIPT_URL;
   // Mark active theme swatch
   applyTheme(CONFIG.THEME || 'golden');
   openModal('configModal');
@@ -1957,7 +1978,6 @@ document.getElementById('btnSaveConfig').addEventListener('click', () => {
     SPREADSHEET_ID: document.getElementById('cfgSpreadsheetId').value.trim(),
     OAUTH_CLIENT_ID: document.getElementById('cfgClientId').value.trim(),
     API_KEY: document.getElementById('cfgApiKey').value.trim(),
-    APPS_SCRIPT_URL: document.getElementById('cfgAppsScript').value.trim(),
     THEME: selectedTheme,
   });
   updateAddButton();
