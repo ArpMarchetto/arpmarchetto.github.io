@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossário DC</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Special+Elite&family=Orbitron:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&family=Cinzel:wght@400;700&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async></script>
+
+<style>
+  :root {
+    /* Warm paper palette */
+    --bg-page:        #f5f0e8;
+    --bg-aged:        #ede5d0;
+    --bg-panel:       #faf7f2;
+    --bg-card:        #f0ead8;
+    --bg-card-hover:  #e8dfc8;
+    --border:         #c8b898;
+    --border-dark:    #9a8060;
+    --ink:            #1a1208;
+    --ink-secondary:  #4a3c28;
+    --ink-muted:      #8a7a60;
+    --ink-faint:      #b8a888;
+    --accent-red:     #b5201a;   /* DC red */
+    --accent-red-dim: #7a1510;
+    --accent-blue:    #1a3a8a;   /* DC blue */
+    --accent-blue-dim:#0e2460;
+    --accent-gold:    #b07a10;
+    --tag-bg:         #ddd0b0;
+    --tag-text:       #5a3e18;
+    --shadow-sm:      0 1px 3px rgba(60,40,10,.12);
+    --shadow-md:      0 3px 10px rgba(60,40,10,.15);
+    --scrollbar-track:#e8dfc8;
+    --scrollbar-thumb:#c8b898;
+
+    /* Typography */
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-body:      'Libre Baskerville', Georgia, serif;
+    --font-table:     'Playfair Display', serif;
+    --font-mono:      'JetBrains Mono', monospace;
+    /* italic style for table cells — set to 'normal' in themes whose fonts
+       have no true italic (monospace/display fonts that synthesize slant) */
+    --font-style-traducao: italic;
+    --font-style-fonte:    italic;
+
+    /* Texture */
+    --bg-texture:     radial-gradient(circle, rgba(160,130,80,.07) 1px, transparent 1px);
+    --bg-texture-size:18px 18px;
+
+    /* Divider strip colours */
+    --strip-a: var(--accent-red);
+    --strip-b: var(--accent-blue);
+    --strip-c: var(--ink);
+
+    /* Table header */
+    --table-head-bg:   var(--ink);
+    --table-head-text: #ffffff;
+  }
+
+  /* ── THEME: MIDNIGHT INK ── */
+  [data-theme="midnight"] {
+    --bg-page:        #0d0f14;
+    --bg-aged:        #111420;
+    --bg-panel:       #141720;
+    --bg-card:        #1a1e2e;
+    --bg-card-hover:  #20253a;
+    --border:         #2a3050;
+    --border-dark:    #3a4570;
+    --ink:            #e8eaf8;
+    --ink-secondary:  #a0a8d0;
+    --ink-muted:      #5a6090;
+    --ink-faint:      #343a58;
+    --accent-red:     #4fc3f7;
+    --accent-red-dim: #29b6f6;
+    --accent-blue:    #1a237e;
+    --accent-blue-dim:#0d1660;
+    --accent-gold:    #ffd54f;
+    --tag-bg:         #1e2440;
+    --tag-text:       #7986cb;
+    --shadow-sm:      0 1px 3px rgba(0,0,10,.4);
+    --shadow-md:      0 3px 10px rgba(0,0,10,.5);
+    --scrollbar-track:#111420;
+    --scrollbar-thumb:#2a3050;
+    --font-display:   'Orbitron', sans-serif;
+    --font-body:      'Share Tech Mono', monospace;
+    --font-table:     'Josefin Sans', sans-serif;
+    --font-mono:      'Share Tech Mono', monospace;
+    /* Josefin Sans has no true italic at small sizes on dark BG — use normal */
+    --font-style-traducao: normal;
+    --font-style-fonte:    normal;
+    --bg-texture:     linear-gradient(rgba(79,195,247,.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(79,195,247,.02) 1px, transparent 1px);
+    --bg-texture-size:32px 32px;
+    --strip-a: #4fc3f7;
+    --strip-b: #1a237e;
+    --strip-c: #ffd54f;
+    --table-head-bg:   #0d1660;
+    --table-head-text: #4fc3f7;
+  }
+
+  /* ── THEME: KRYPTONITE ── */
+  [data-theme="kryptonite"] {
+    --bg-page:        #050e08;
+    --bg-aged:        #091408;
+    --bg-panel:       #0a1a0a;
+    --bg-card:        #0d2010;
+    --bg-card-hover:  #102816;
+    --border:         #1a4020;
+    --border-dark:    #2a6030;
+    --ink:            #ccffcc;
+    --ink-secondary:  #88dd88;
+    --ink-muted:      #3a8040;
+    --ink-faint:      #1a4020;
+    --accent-red:     #39ff14;
+    --accent-red-dim: #22cc00;
+    --accent-blue:    #006622;
+    --accent-blue-dim:#004416;
+    --accent-gold:    #80ff40;
+    --tag-bg:         #0a2a10;
+    --tag-text:       #50cc50;
+    --shadow-sm:      0 1px 3px rgba(0,60,0,.4);
+    --shadow-md:      0 3px 10px rgba(0,60,0,.5);
+    --scrollbar-track:#050e08;
+    --scrollbar-thumb:#1a4020;
+    --font-display:   'Orbitron', sans-serif;
+    --font-body:      'Share Tech Mono', monospace;
+    /* Use Josefin Sans for table data — monospace italic is unreadable */
+    --font-table:     'Josefin Sans', sans-serif;
+    --font-mono:      'Share Tech Mono', monospace;
+    --font-style-traducao: normal;
+    --font-style-fonte:    normal;
+    --bg-texture:     repeating-linear-gradient(0deg, transparent, transparent 2px,
+                        rgba(57,255,20,.025) 2px, rgba(57,255,20,.025) 3px);
+    --bg-texture-size:auto;
+    --strip-a: #39ff14;
+    --strip-b: #006622;
+    --strip-c: #80ff40;
+    --table-head-bg:   #021a05;
+    --table-head-text: #39ff14;
+  }
+
+  /* ── THEME: AMAZONIAN PARCHMENT ── */
+  [data-theme="amazonian"] {
+    --bg-page:        #f0ebe0;
+    --bg-aged:        #e4dcc8;
+    --bg-panel:       #f6f3ec;
+    --bg-card:        #ede7d5;
+    --bg-card-hover:  #e5dfc8;
+    --border:         #b89a6a;
+    --border-dark:    #8a6840;
+    --ink:            #2a1a08;
+    --ink-secondary:  #5a3c1a;
+    --ink-muted:      #8a6840;
+    --ink-faint:      #c8a878;
+    --accent-red:     #c05820;
+    --accent-red-dim: #8a3c10;
+    --accent-blue:    #3a6020;
+    --accent-blue-dim:#284018;
+    --accent-gold:    #c08820;
+    --tag-bg:         #d4c090;
+    --tag-text:       #5a3808;
+    --shadow-sm:      0 1px 3px rgba(60,30,0,.12);
+    --shadow-md:      0 3px 10px rgba(60,30,0,.15);
+    --scrollbar-track:#e4dcc8;
+    --scrollbar-thumb:#b89a6a;
+    --font-display:   'Cinzel', serif;
+    --font-body:      'IM Fell English', serif;
+    --font-table:     'IM Fell English', serif;
+    --font-mono:      'JetBrains Mono', monospace;
+    --bg-texture:     radial-gradient(ellipse, rgba(100,60,10,.06) 1px, transparent 1px);
+    --bg-texture-size:22px 22px;
+    --strip-a: #c05820;
+    --strip-b: #3a6020;
+    --strip-c: #2a1a08;
+  }
+
+  /* ── THEME: GOTHAM NEON ── */
+  [data-theme="gotham"] {
+    --bg-page:        #08070f;
+    --bg-aged:        #0d0c18;
+    --bg-panel:       #0f0e1c;
+    --bg-card:        #141228;
+    --bg-card-hover:  #1a1835;
+    --border:         #2a1a50;
+    --border-dark:    #4a2888;
+    --ink:            #f0e8ff;
+    --ink-secondary:  #c0a8f0;
+    --ink-muted:      #7a5ab0;
+    --ink-faint:      #2e1a50;
+    --accent-red:     #00e5ff;
+    --accent-red-dim: #00b8d4;
+    --accent-blue:    #200840;
+    --accent-blue-dim:#140528;
+    --accent-gold:    #e040fb;
+    --tag-bg:         #160e30;
+    --tag-text:       #b388ff;
+    --shadow-sm:      0 1px 3px rgba(0,0,20,.5);
+    --shadow-md:      0 3px 10px rgba(0,0,20,.6);
+    --scrollbar-track:#0d0c18;
+    --scrollbar-thumb:#2a1a50;
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-body:      'Josefin Sans', sans-serif;
+    --font-table:     'Josefin Sans', sans-serif;
+    --font-mono:      'Share Tech Mono', monospace;
+    /* Josefin Sans at 300–400 weight italic is too thin on dark backgrounds */
+    --font-style-traducao: normal;
+    --font-style-fonte:    normal;
+    --bg-texture:     radial-gradient(ellipse at 50% 50%, rgba(224,64,251,.04) 0%, transparent 70%);
+    --bg-texture-size:100% 100%;
+    --strip-a: #e040fb;
+    --strip-b: #200840;
+    --strip-c: #00e5ff;
+    --table-head-bg:   #030209;
+    --table-head-text: #e040fb;
+  }
+
+  /* ── THEME: SILVER AGE ── */
+  [data-theme="silver"] {
+    --bg-page:        #f8f9ff;
+    --bg-aged:        #eef0fc;
+    --bg-panel:       #ffffff;
+    --bg-card:        #f0f2fc;
+    --bg-card-hover:  #e4e8f8;
+    --border:         #b0b8e0;
+    --border-dark:    #6070b8;
+    --ink:            #080c28;
+    --ink-secondary:  #2a3468;
+    --ink-muted:      #6070a8;
+    --ink-faint:      #a8b0d0;
+    --accent-red:     #d42020;
+    --accent-red-dim: #a01818;
+    --accent-blue:    #1040c0;
+    --accent-blue-dim:#0828a0;
+    --accent-gold:    #e0a020;
+    --tag-bg:         #dce0f4;
+    --tag-text:       #2a3468;
+    --shadow-sm:      0 1px 3px rgba(0,20,80,.1);
+    --shadow-md:      0 3px 10px rgba(0,20,80,.14);
+    --scrollbar-track:#eef0fc;
+    --scrollbar-thumb:#b0b8e0;
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-body:      'Josefin Sans', sans-serif;
+    --font-table:     'Playfair Display', serif;
+    --font-mono:      'JetBrains Mono', monospace;
+    --bg-texture:     repeating-linear-gradient(90deg, rgba(16,64,192,.025) 0px, rgba(16,64,192,.025) 1px, transparent 1px, transparent 28px),
+                      repeating-linear-gradient(0deg, rgba(16,64,192,.025) 0px, rgba(16,64,192,.025) 1px, transparent 1px, transparent 28px);
+    --bg-texture-size:28px 28px;
+    --strip-a: #d42020;
+    --strip-b: #1040c0;
+    --strip-c: #e0a020;
+  }
+
+  /* ── THEME: ELSEWORLDS SEPIA ── */
+  [data-theme="elseworlds"] {
+    --bg-page:        #2a1e10;
+    --bg-aged:        #231808;
+    --bg-panel:       #302418;
+    --bg-card:        #3a2c1c;
+    --bg-card-hover:  #443420;
+    --border:         #5a4028;
+    --border-dark:    #7a5838;
+    --ink:            #f0dca8;
+    --ink-secondary:  #c8a870;
+    --ink-muted:      #a88050;
+    --ink-faint:      #6a4e28;
+    --accent-red:     #e8b840;
+    --accent-red-dim: #c89820;
+    --accent-blue:    #5a3808;
+    --accent-blue-dim:#3c2405;
+    --accent-gold:    #f0cc60;
+    --tag-bg:         #3a2808;
+    --tag-text:       #c8a050;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,.35);
+    --shadow-md:      0 3px 10px rgba(0,0,0,.4);
+    --scrollbar-track:#231808;
+    --scrollbar-thumb:#5a4028;
+    --font-display:   'Special Elite', cursive;
+    --font-body:      'Special Elite', cursive;
+    /* Special Elite has no italic — IM Fell English does */
+    --font-table:     'IM Fell English', serif;
+    --font-mono:      'JetBrains Mono', monospace;
+    --font-style-traducao: italic;  /* IM Fell English italic is excellent */
+    --font-style-fonte:    italic;
+    --bg-texture:     radial-gradient(circle, rgba(200,150,50,.08) 1px, transparent 1px);
+    --bg-texture-size:20px 20px;
+    --strip-a: #e8b840;
+    --strip-b: #5a3808;
+    --strip-c: #f0cc60;
+    --table-head-bg:   #0f0902;
+    --table-head-text: #e8b840;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-page);
+    background-image: var(--bg-texture);
+    background-size: var(--bg-texture-size);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.65;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+  ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+  /* ── HEADER ── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--accent-blue);
+    /* comic-panel double border */
+    border-bottom: 4px solid var(--ink);
+    box-shadow: 0 4px 0 var(--accent-red);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    flex-shrink: 0;
+  }
+
+  .logo-area h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 2px 2px 0 var(--ink);
+  }
+
+  .logo-area .subtitle {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-style: italic;
+    color: rgba(255,255,255,.7);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── SEARCH ── */
+  .search-container {
+    flex: 1;
+    max-width: 460px;
+    min-width: 200px;
+    position: relative;
+  }
+
+  .search-container svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-muted);
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+
+  .search-container:focus-within svg { color: var(--accent-blue); }
+
+  #searchInput {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.4rem;
+    background: var(--bg-panel);
+    border: 2px solid var(--ink);
+    border-radius: 0;          /* flat, comic-panel style */
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  #searchInput::placeholder { color: var(--ink-faint); font-style: italic; }
+
+  #searchInput:focus {
+    border-color: var(--accent-red);
+    box-shadow: 3px 3px 0 var(--accent-red);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .btn {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    padding: 0.45rem 1rem;
+    border-radius: 0;
+    border: 2px solid rgba(255,255,255,.6);
+    background: transparent;
+    color: rgba(255,255,255,.85);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 2px 2px 0 rgba(0,0,0,.3);
+  }
+
+  .btn:hover {
+    background: rgba(255,255,255,.15);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 3px 3px 0 rgba(0,0,0,.35);
+  }
+
+  .btn-accent {
+    background: var(--accent-red);
+    border-color: #fff;
+    color: #fff;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  .btn-accent:disabled,
+  .btn-accent[disabled] {
+    background: var(--border);
+    border-color: var(--border-dark);
+    color: var(--ink-faint);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .btn-accent:not(:disabled):hover {
+    background: #d42820;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  /* ── DIVIDER STRIP ── */
+  .divider-strip {
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--strip-a)   0px,
+      var(--strip-a)   16px,
+      var(--strip-b)   16px,
+      var(--strip-b)   32px,
+      var(--strip-c)   32px,
+      var(--strip-c)   36px
+    );
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.7rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stats-left {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+  }
+
+  .stat-pill { display: flex; align-items: center; gap: 0.3rem; }
+
+  .stat-pill .num {
+    color: var(--accent-red);
+    font-weight: 600;
+  }
+
+  /* ── TAB FILTERS ── */
+  .tabs-row {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.07em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 0;
+    border: 1.5px solid var(--border);
+    background: var(--bg-panel);
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover {
+    color: var(--ink);
+    background: var(--bg-card);
+    border-color: var(--border-dark);
+  }
+
+  .tab-btn.active {
+    color: #fff;
+    background: var(--accent-blue);
+    border-color: var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem 4rem;
+  }
+
+  /* ── RESULTS TABLE ── */
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--border-dark);
+    background: var(--bg-panel);
+  }
+
+  .results-table thead th {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: var(--table-head-text);
+    padding: 0.65rem 1rem;
+    text-align: left;
+    background: var(--table-head-bg);
+    position: sticky;
+    top: 72px;          /* clear the header */
+    z-index: 10;
+    border-right: 1px solid rgba(255,255,255,.12);
+  }
+
+  .results-table thead th:last-child { border-right: none; }
+
+  .results-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+  }
+
+  /* zebra stripe — aged paper feel */
+  .results-table tbody tr:nth-child(even) { background: var(--bg-aged); }
+  .results-table tbody tr:nth-child(odd)  { background: var(--bg-panel); }
+
+  .results-table tbody tr:hover { background: var(--bg-card-hover) !important; }
+
+  .results-table td {
+    padding: 0.65rem 1rem;
+    vertical-align: top;
+    font-size: 0.9rem;
+    border-right: 1px solid rgba(160,130,80,.25);
+  }
+
+  .results-table td:last-child { border-right: none; }
+
+  .col-original {
+    font-family: var(--font-table);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    min-width: 160px;
+  }
+
+  .col-traducao {
+    font-family: var(--font-table);
+    font-style: var(--font-style-traducao);
+    color: var(--accent-red);
+    font-weight: 600;
+    min-width: 160px;
+  }
+
+  .col-info {
+    color: var(--ink-secondary);
+    font-size: 0.83rem;
+  }
+
+  .col-filiacao {
+    color: var(--ink-secondary);
+    font-size: 0.83rem;
+  }
+
+  .col-fonte {
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    font-style: var(--font-style-fonte);
+  }
+
+  .col-aba { min-width: 90px; }
+
+  .aba-tag {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border: 1.5px solid var(--border-dark);
+    white-space: nowrap;
+  }
+
+  mark {
+    background: rgba(181, 32, 26, 0.18);
+    color: var(--accent-red-dim);
+    border-radius: 1px;
+    padding: 0 2px;
+    font-style: normal;
+  }
+
+  /* ── EMPTY / LOADING / ERROR STATES ── */
+  .state-message {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--ink-muted);
+  }
+
+  .state-message .icon {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .state-message h3 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-secondary);
+    margin-bottom: 0.4rem;
+  }
+
+  .state-message p {
+    font-size: 0.88rem;
+    font-style: italic;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid var(--border);
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.65);
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg-panel);
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    box-shadow: 6px 6px 0 var(--ink);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    animation: modalIn 0.18s ease-out;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+  }
+
+  .modal h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+    border-bottom: 3px double var(--border-dark);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .form-group { margin-bottom: 1.1rem; }
+
+  .form-group label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-secondary);
+    margin-bottom: 0.3rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    background: var(--bg-page);
+    border: 2px solid var(--border-dark);
+    border-radius: 0;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 2px 2px 0 var(--accent-blue);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 60px; }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234a3c28' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 2rem;
+    background-color: var(--bg-page);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* modal buttons revert to dark-on-light */
+  .modal .btn {
+    border-color: var(--border-dark);
+    background: var(--bg-card);
+    color: var(--ink-secondary);
+    box-shadow: 2px 2px 0 var(--border-dark);
+  }
+
+  .modal .btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--ink);
+    box-shadow: 3px 3px 0 var(--border-dark);
+  }
+
+  .modal .btn-accent {
+    background: var(--accent-blue);
+    border-color: var(--ink);
+    color: #fff;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  .modal .btn-accent:hover {
+    background: #1e45a8;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0;
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.28s ease;
+    pointer-events: none;
+    border: 2px solid;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  .toast.success { background: #e8f5e8; color: #1a5c1a; border-color: #1a5c1a; }
+  .toast.error   { background: #faeaea; color: var(--accent-red); border-color: var(--accent-red); }
+
+  /* ── CONFIG BANNER ── */
+  .config-banner {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 1rem 1.5rem;
+    background: #fdf8ec;
+    border: 2px solid var(--accent-gold);
+    border-left: 6px solid var(--accent-gold);
+    font-size: 0.83rem;
+    color: var(--ink-secondary);
+    display: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .config-banner strong { color: var(--ink); }
+
+  .config-banner code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: var(--bg-card);
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    color: var(--accent-gold);
+  }
+
+  /* ── LOGIN SCREEN ── */
+  #loginScreen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-page);
+    background-image: radial-gradient(circle, rgba(160,130,80,.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+
+  #loginScreen.hidden { display: none; }
+
+  .login-card {
+    background: var(--bg-panel);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 2.5rem 3rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .login-card .login-title {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    line-height: 1;
+    text-shadow: 2px 2px 0 var(--border);
+  }
+
+  .login-card .login-subtitle {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin-top: 0.4rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px double var(--border-dark);
+    padding-bottom: 1.2rem;
+  }
+
+  .login-card p {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .btn-google {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    padding: 0.65rem 1.5rem;
+    background: var(--accent-blue);
+    color: #fff;
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+
+  .btn-google:hover {
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: translate(-1px, -1px);
+  }
+
+  .btn-google:active {
+    box-shadow: 1px 1px 0 var(--ink);
+    transform: translate(2px, 2px);
+  }
+
+  /* user badge in header */
+  .user-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(255,255,255,.75);
+  }
+
+  .user-badge img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,.4);
+  }
+
+  .user-badge .btn-signout {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,.35);
+    color: rgba(255,255,255,.65);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: none;
+  }
+
+  .user-badge .btn-signout:hover {
+    border-color: rgba(255,255,255,.7);
+    color: #fff;
+  }
+
+  /* ── THEME PICKER ── */
+  .theme-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+  }
+
+  .theme-swatch {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border: 2px solid var(--border-dark);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 0 var(--border);
+    flex-shrink: 0;
+  }
+
+  .theme-swatch:hover {
+    border-color: var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+
+  .theme-swatch.active {
+    border-color: var(--accent-red);
+    box-shadow: 3px 3px 0 var(--accent-red);
+  }
+
+  .theme-swatch .swatch-bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .theme-swatch .swatch-stripe {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 10px;
+    display: flex;
+  }
+
+  .theme-swatch .swatch-stripe span {
+    flex: 1;
+  }
+
+  .theme-swatch .swatch-label {
+    position: absolute;
+    top: 3px; left: 0; right: 0;
+    text-align: center;
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    padding: 0 2px;
+    text-transform: uppercase;
+  }
+
+  .theme-swatch .swatch-check {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: rgba(0,0,0,.35);
+  }
+
+  .theme-swatch.active .swatch-check { display: flex; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .header-inner { padding: 0.9rem 1rem; }
+    .search-container { max-width: 100%; order: 3; flex-basis: 100%; }
+    .main-content { padding: 0.75rem 1rem 3rem; }
+    .stats-bar { padding: 0.6rem 1rem; }
+
+    .results-table { border-left: none; border-right: none; box-shadow: none; }
+
+    .results-table thead { display: none; }
+    .results-table tbody tr {
+      display: block;
+      padding: 0.75rem 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .results-table td {
+      display: block;
+      padding: 0.15rem 0;
+      border-right: none;
+    }
+    .results-table td:before {
+      content: attr(data-label);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-right: 0.4rem;
+    }
+    .results-table td:empty { display: none; }
+    .results-table td.col-aba { margin-top: 0.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-title">GLOSSÁRIO DC</div>
+    <div class="login-subtitle">Tradução &amp; Referência</div>
+    <p>Este glossário é restrito aos membros com acesso à planilha.<br>Faça login com a sua conta Google para continuar.</p>
+
+    <!-- shown when page is served normally -->
+    <div id="loginNormal">
+      <button class="btn-google" id="btnSignIn">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#fff" d="M44.5 20H24v8.5h11.7C34.2 33.6 29.7 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 6 1.1 8.2 3l6-6C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.9 0 20-7.9 20-21 0-1.3-.2-2.7-.5-4z"/></svg>
+        Entrar com Google
+      </button>
+      <p style="margin-top:1rem;font-size:0.75rem;color:var(--ink-muted)">
+        Primeira vez?
+        <button id="btnConfigFromLogin" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:0.75rem;color:var(--accent-blue);text-decoration:underline;padding:0">Configure o OAuth Client ID</button>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-area">
+      <h1>GLOSSÁRIO DC</h1>
+      <span class="subtitle">Tradução &amp; Referência</span>
+    </div>
+    <div class="search-container">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar em todas as abas… (ex: Lanterna, Krypton)" autofocus>
+    </div>
+    <div class="header-actions">
+      <div class="user-badge" id="userBadge" style="display:none">
+        <img id="userAvatar" src="" alt="">
+        <span id="userName"></span>
+        <button class="btn-signout" id="btnSignOut">Sair</button>
+      </div>
+      <button class="btn" id="btnConfig" title="Configurações">⚙</button>
+      <button class="btn btn-accent" id="btnAdd">+ Novo Termo</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── COLOUR STRIP ── -->
+<div class="divider-strip" aria-hidden="true"></div>
+
+<!-- ── STATS & TABS ── -->
+<div class="stats-bar">
+  <div class="stats-left">
+    <div class="stat-pill"><span class="num" id="totalCount">—</span> termos</div>
+    <div class="stat-pill"><span class="num" id="sheetCount">—</span> abas</div>
+    <div class="stat-pill" id="filterInfo" style="display:none">
+      mostrando <span class="num" id="filteredCount">0</span> resultados
+    </div>
+  </div>
+  <div class="tabs-row" id="tabsRow">
+    <button class="tab-btn active" data-tab="__all__">Todas</button>
+  </div>
+</div>
+
+<!-- ── CONFIG BANNER ── -->
+<div class="config-banner" id="configBanner">
+  <p><strong>⚠ Configuração necessária.</strong> Defina o <code>SPREADSHEET_ID</code> e o <code>OAUTH_CLIENT_ID</code> no código-fonte deste HTML, ou use o painel ⚙.</p>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main-content">
+  <div id="loadingState" class="state-message">
+    <div class="loading-spinner"></div>
+    <h3>Carregando glossário…</h3>
+    <p>Buscando dados da planilha</p>
+  </div>
+
+  <div id="emptyState" class="state-message" style="display:none">
+    <div class="icon">🔍</div>
+    <h3>Nenhum resultado</h3>
+    <p>Tente outro termo ou limpe o filtro de aba.</p>
+  </div>
+
+  <div id="errorState" class="state-message" style="display:none">
+    <div class="icon">⚠</div>
+    <h3>Erro ao carregar</h3>
+    <p id="errorMsg">Verifique a configuração da API.</p>
+  </div>
+
+  <table class="results-table" id="resultsTable" style="display:none">
+    <thead>
+      <tr>
+        <th>Original</th>
+        <th>Tradução</th>
+        <th>Identidade / Info</th>
+        <th>Filiação</th>
+        <th>Fonte</th>
+        <th>Aba</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+</main>
+
+<!-- ── MODAL: NOVO TERMO ── -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h2>Novo Termo</h2>
+    <div class="form-group">
+      <label>Aba (categoria)</label>
+      <select id="formSheet"></select>
+    </div>
+    <div class="form-group">
+      <label>Original</label>
+      <input type="text" id="formOriginal" placeholder="Termo em inglês">
+    </div>
+    <div class="form-group">
+      <label>Tradução</label>
+      <input type="text" id="formTraducao" placeholder="Tradução em português">
+    </div>
+    <div class="form-group">
+      <label>Identidade Secreta / Info</label>
+      <input type="text" id="formInfo" placeholder="(opcional)">
+    </div>
+    <div class="form-group">
+      <label>Filiação</label>
+      <input type="text" id="formFiliacao" placeholder="(opcional)">
+    </div>
+    <div class="form-group">
+      <label>Fonte</label>
+      <input type="text" id="formFonte" placeholder="(opcional)">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="btnCancelAdd">Cancelar</button>
+      <button class="btn btn-accent" id="btnSubmitAdd">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: CONFIG ── -->
+<div class="modal-overlay" id="configModal">
+  <div class="modal">
+    <h2>Configurações</h2>
+    <div class="form-group">
+      <label>Spreadsheet ID</label>
+      <input type="text" id="cfgSpreadsheetId" placeholder="1ueMQ7axeZgiT9fwwUXX6S9pa9jwnkCQn">
+    </div>
+    <div class="form-group">
+      <label>OAuth Client ID <span style="font-size:0.7rem;font-weight:normal;color:var(--ink-muted)">(modo online)</span></label>
+      <input type="text" id="cfgClientId" placeholder="xxxx.apps.googleusercontent.com">
+    </div>
+    <div class="form-group">
+      <label>Google API Key <span style="font-size:0.7rem;font-weight:normal;color:var(--ink-muted)">(modo offline / file://)</span></label>
+      <input type="text" id="cfgApiKey" placeholder="AIzaSy...">
+    </div>
+    <div class="form-group">
+      <label>Apps Script URL (para cadastro)</label>
+      <input type="text" id="cfgAppsScript" placeholder="https://script.google.com/macros/s/.../exec">
+    </div>
+    <div class="form-group">
+      <label>Tema Visual</label>
+      <div class="theme-picker" id="themePicker">
+
+        <!-- 1. DC Golden Age (default) -->
+        <button class="theme-swatch" data-theme="golden" title="DC Golden Age">
+          <div class="swatch-bg" style="background:#f5f0e8"></div>
+          <div class="swatch-stripe">
+            <span style="background:#b5201a"></span>
+            <span style="background:#1a3a8a"></span>
+            <span style="background:#1a1208"></span>
+          </div>
+          <div class="swatch-label" style="color:#1a1208">Golden<br>Age</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 2. Midnight Ink -->
+        <button class="theme-swatch" data-theme="midnight" title="Midnight Ink">
+          <div class="swatch-bg" style="background:#0d0f14"></div>
+          <div class="swatch-stripe">
+            <span style="background:#4fc3f7"></span>
+            <span style="background:#1a237e"></span>
+            <span style="background:#ffd54f"></span>
+          </div>
+          <div class="swatch-label" style="color:#e8eaf8">Mid<br>night</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 3. Kryptonite -->
+        <button class="theme-swatch" data-theme="kryptonite" title="Kryptonite">
+          <div class="swatch-bg" style="background:#050e08"></div>
+          <div class="swatch-stripe">
+            <span style="background:#39ff14"></span>
+            <span style="background:#006622"></span>
+            <span style="background:#80ff40"></span>
+          </div>
+          <div class="swatch-label" style="color:#39ff14">Kryp<br>tonite</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 4. Amazonian Parchment -->
+        <button class="theme-swatch" data-theme="amazonian" title="Amazonian Parchment">
+          <div class="swatch-bg" style="background:#f0ebe0"></div>
+          <div class="swatch-stripe">
+            <span style="background:#c05820"></span>
+            <span style="background:#3a6020"></span>
+            <span style="background:#2a1a08"></span>
+          </div>
+          <div class="swatch-label" style="color:#2a1a08">Ama<br>zonian</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 5. Gotham Neon -->
+        <button class="theme-swatch" data-theme="gotham" title="Gotham Neon">
+          <div class="swatch-bg" style="background:#08070f"></div>
+          <div class="swatch-stripe">
+            <span style="background:#e040fb"></span>
+            <span style="background:#200840"></span>
+            <span style="background:#00e5ff"></span>
+          </div>
+          <div class="swatch-label" style="color:#f0e8ff">Gotham<br>Neon</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 6. Silver Age -->
+        <button class="theme-swatch" data-theme="silver" title="Silver Age">
+          <div class="swatch-bg" style="background:#f8f9ff"></div>
+          <div class="swatch-stripe">
+            <span style="background:#d42020"></span>
+            <span style="background:#1040c0"></span>
+            <span style="background:#e0a020"></span>
+          </div>
+          <div class="swatch-label" style="color:#080c28">Silver<br>Age</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+        <!-- 7. Elseworlds Sepia -->
+        <button class="theme-swatch" data-theme="elseworlds" title="Elseworlds Sepia">
+          <div class="swatch-bg" style="background:#2a1e10"></div>
+          <div class="swatch-stripe">
+            <span style="background:#e8b840"></span>
+            <span style="background:#5a3808"></span>
+            <span style="background:#f0cc60"></span>
+          </div>
+          <div class="swatch-label" style="color:#f0dca8">Else<br>worlds</div>
+          <div class="swatch-check">✓</div>
+        </button>
+
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="btnCancelConfig">Cancelar</button>
+      <button class="btn btn-accent" id="btnSaveConfig">Salvar &amp; Recarregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO — substitua estes valores ou use o painel ⚙
+// ═══════════════════════════════════════════════════════════════
+const DEFAULT_CONFIG = {
+  SPREADSHEET_ID: '1An3DK05ecq7fWFerbuh6iwpi9iogOuBLrIlxhRhR0dk',
+  // OAuth Client ID — necessário para o modo online (com login Google).
+  // É seguro deixar aqui — não é um segredo.
+  OAUTH_CLIENT_ID: '',      // ex: '1234567890-abc.apps.googleusercontent.com'
+  // API Key — usada apenas no modo offline (file://), somente leitura.
+  API_KEY: '',              // ex: 'AIzaSy...'
+  APPS_SCRIPT_URL: '',      // URL do Web App (Apps Script) para POST
+  THEME: 'golden',          // tema visual ativo
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  THEMES
+// ═══════════════════════════════════════════════════════════════
+const THEMES = {
+  golden:     'DC Golden Age',
+  midnight:   'Midnight Ink',
+  kryptonite: 'Kryptonite',
+  amazonian:  'Amazonian Parchment',
+  gotham:     'Gotham Neon',
+  silver:     'Silver Age',
+  elseworlds: 'Elseworlds Sepia',
+};
+
+function applyTheme(themeKey) {
+  const key = THEMES[themeKey] ? themeKey : 'golden';
+  // golden is the :root default — remove data-theme entirely
+  if (key === 'golden') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', key);
+  }
+  // Update swatch active state if picker is in DOM
+  document.querySelectorAll('.theme-swatch').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === key);
+  });
+}
+
+function loadTheme() {
+  applyTheme(CONFIG.THEME || 'golden');
+}
+
+// ─── State ───
+let CONFIG = loadConfig();
+let allEntries = [];
+let sheetNames = [];
+let activeTab = '__all__';
+let searchQuery = '';
+let accessToken = null;     // OAuth access token (in-memory only, never stored)
+
+// ─── Config persistence (localStorage) ───
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem('glossario_dc_config');
+    if (saved) return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+  } catch (e) {}
+  return { ...DEFAULT_CONFIG };
+}
+
+function saveConfig(cfg) {
+  localStorage.setItem('glossario_dc_config', JSON.stringify(cfg));
+  CONFIG = cfg;
+}
+
+// ─── OAuth / Google Identity Services ───
+let tokenClient = null;
+
+function initGoogleAuth() {
+  if (!CONFIG.OAUTH_CLIENT_ID) return;
+
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CONFIG.OAUTH_CLIENT_ID,
+    // Read-only scope is enough for fetching data.
+    // The write path goes through Apps Script (which runs as the script owner),
+    // so we don't need a write scope here.
+    scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    callback: (response) => {
+      if (response.error) {
+        showLoginError('Falha ao autenticar: ' + response.error);
+        return;
+      }
+      accessToken = response.access_token;
+      onSignedIn();
+    },
+  });
+}
+
+function requestToken() {
+  if (!tokenClient) {
+    showLoginError('OAuth Client ID não configurado. Clique em ⚙ no cabeçalho para configurar.');
+    return;
+  }
+  tokenClient.requestAccessToken({ prompt: 'select_account' });
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  if (el) { el.textContent = msg; el.style.display = ''; }
+}
+
+function onSignedIn() {
+  // Hide login screen
+  document.getElementById('loginScreen').classList.add('hidden');
+
+  // Show user info from the token (we decode the id_token via a quick userinfo call)
+  fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+    .then(r => r.json())
+    .then(info => {
+      const badge = document.getElementById('userBadge');
+      badge.style.display = 'flex';
+      document.getElementById('userName').textContent = info.name || info.email || '';
+      if (info.picture) document.getElementById('userAvatar').src = info.picture;
+    })
+    .catch(() => {
+      document.getElementById('userBadge').style.display = 'flex';
+    });
+
+  loadGlossary();
+}
+
+function signOut() {
+  if (accessToken) {
+    google.accounts.oauth2.revoke(accessToken, () => {});
+    accessToken = null;
+  }
+  document.getElementById('userBadge').style.display = 'none';
+  document.getElementById('userAvatar').src = '';
+  document.getElementById('userName').textContent = '';
+  document.getElementById('loginScreen').classList.remove('hidden');
+
+  // Reset table state
+  document.getElementById('loadingState').style.display = '';
+  document.getElementById('errorState').style.display = 'none';
+  document.getElementById('resultsTable').style.display = 'none';
+  allEntries = [];
+  sheetNames = [];
+}
+
+// ─── Google Sheets API ───
+// Uses OAuth Bearer token when signed in (online mode),
+// or a plain API key when running as file:// (read-only offline mode).
+async function fetchAllSheets() {
+  if (!CONFIG.SPREADSHEET_ID) throw new Error('CONFIG_MISSING');
+
+  const isOffline = location.protocol === 'file:';
+
+  let headers = {};
+  let keyParam = '';
+
+  if (isOffline) {
+    if (!CONFIG.API_KEY) throw new Error('API Key não configurada. Clique em ⚙ para adicionar a sua Google Sheets API Key.');
+    keyParam = `&key=${CONFIG.API_KEY}`;
+  } else {
+    if (!accessToken) throw new Error('Não autenticado.');
+    headers = { Authorization: `Bearer ${accessToken}` };
+  }
+
+  // 1) Get sheet metadata
+  const metaRes = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}?fields=sheets.properties.title${keyParam}`,
+    { headers }
+  );
+  if (!metaRes.ok) {
+    const body = await metaRes.json().catch(() => ({}));
+    const reason = body?.error?.message || '';
+    const status = metaRes.status;
+    if (status === 403) throw new Error(isOffline
+      ? `Acesso negado (403). A planilha precisa estar compartilhada como "Qualquer pessoa com o link pode ver". Detalhe: ${reason}`
+      : `Acesso negado (403). A sua conta não tem permissão para ler esta planilha. Detalhe: ${reason}`);
+    if (status === 401) throw new Error('Sessão expirada. Recarregue a página e faça login novamente.');
+    if (status === 404) throw new Error(`Planilha não encontrada (404). O Spreadsheet ID está correto? Detalhe: ${reason}`);
+    throw new Error(`Erro HTTP ${status} ao buscar metadados. ${reason}`);
+  }
+  const meta = await metaRes.json();
+  sheetNames = meta.sheets.map(s => s.properties.title);
+
+  // 2) Batch-fetch all sheets
+  const ranges = sheetNames.map(n => encodeURIComponent(`'${n}'`));
+  const dataRes = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values:batchGet?ranges=${ranges.join('&ranges=')}${keyParam}`,
+    { headers }
+  );
+  if (!dataRes.ok) {
+    const body = await dataRes.json().catch(() => ({}));
+    throw new Error(`Erro HTTP ${dataRes.status} ao buscar dados. ${body?.error?.message || ''}`);
+  }
+  const data = await dataRes.json();
+
+  // 3) Parse into flat array
+  allEntries = [];
+  data.valueRanges.forEach((vr, idx) => {
+    const sheetName = sheetNames[idx];
+    const rows = vr.values || [];
+    const startIdx = (rows.length > 0 && rows[0][0] && /^(ORIGINAL|NOME)/i.test(rows[0][0])) ? 1 : 0;
+    for (let i = startIdx; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r || !r[0]) continue;
+      allEntries.push({
+        original:  (r[0] || '').trim(),
+        traducao:  (r[1] || '').trim(),
+        info:      (r[2] || '').trim(),
+        filiacao:  (r[3] || '').trim(),
+        fonte:     (r[4] || '').trim(),
+        sheet: sheetName,
+      });
+    }
+  });
+
+  return allEntries;
+}
+
+// ─── Rendering ───
+function renderTabs() {
+  const tabsRow = document.getElementById('tabsRow');
+  tabsRow.innerHTML = `<button class="tab-btn ${activeTab === '__all__' ? 'active' : ''}" data-tab="__all__">Todas</button>`;
+  sheetNames.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = `tab-btn ${activeTab === name ? 'active' : ''}`;
+    btn.dataset.tab = name;
+    btn.textContent = name;
+    tabsRow.appendChild(btn);
+  });
+}
+
+// ─── Fuzzy search ───
+// Bitap algorithm: finds the best approximate match of `pattern` inside
+// `text`, allowing up to `maxErrors` substitutions/insertions/deletions.
+// Returns { score, matchStart, matchEnd } or null if no match within budget.
+function bitapSearch(text, pattern, maxErrors) {
+  const m = pattern.length;
+  if (m === 0) return { score: 0, matchStart: 0, matchEnd: 0 };
+  if (m > 32) {
+    // Pattern too long for bitmask; fall back to substring check
+    const idx = text.indexOf(pattern);
+    return idx >= 0 ? { score: 0, matchStart: idx, matchEnd: idx + m } : null;
+  }
+
+  // Pre-compute pattern bitmasks
+  const patternMask = {};
+  for (let i = 0; i < m; i++) {
+    const ch = pattern[i];
+    patternMask[ch] = (patternMask[ch] || 0) | (1 << i);
+  }
+
+  // State: one bit-vector per error level
+  const R = new Array(maxErrors + 1).fill(0);
+  const matchMask = 1 << (m - 1);
+  let bestScore = maxErrors + 1;
+  let bestEnd = -1;
+
+  for (let j = 0; j < text.length; j++) {
+    const ch = text[j];
+    const charMask = patternMask[ch] || 0;
+
+    // Update from highest error level down to avoid using updated values
+    for (let k = maxErrors; k >= 1; k--) {
+      R[k] = ((R[k] << 1) | 1) & charMask   // match / substitute
+           | ((R[k - 1] << 1) | 1)            // insert into pattern
+           |  (R[k - 1])                       // delete from pattern
+           | ((R[k - 1] << 1) | 1);            // (covers all edit ops)
+    }
+    R[0] = ((R[0] << 1) | 1) & charMask;
+
+    // Check each error level for a match ending at position j
+    for (let k = 0; k <= maxErrors; k++) {
+      if (R[k] & matchMask) {
+        if (k < bestScore) {
+          bestScore = k;
+          bestEnd = j + 1; // exclusive end
+        }
+        break;
+      }
+    }
+  }
+
+  if (bestScore > maxErrors) return null;
+
+  // Walk back to find the approximate start of the match
+  const approxStart = Math.max(0, bestEnd - m - bestScore);
+  return { score: bestScore, matchStart: approxStart, matchEnd: bestEnd };
+}
+
+// Normalise a string for matching: lowercase + strip diacritics
+function normalise(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Returns a numeric score for how well `query` matches `entry`.
+// Lower is better; Infinity means no match.
+// Weights: original/traducao are most important.
+function scoreEntry(entry, query) {
+  if (!query) return 0;
+
+  const q = normalise(query);
+  const qLen = q.length;
+
+  // Allow 0 errors for very short queries, 1 for ≤5 chars, 2 for longer
+  const maxErr = qLen <= 2 ? 0 : qLen <= 5 ? 1 : 2;
+
+  const fields = [
+    { text: normalise(entry.original),  weight: 1 },
+    { text: normalise(entry.traducao),  weight: 1 },
+    { text: normalise(entry.info),      weight: 3 },
+    { text: normalise(entry.filiacao),  weight: 3 },
+    { text: normalise(entry.fonte),     weight: 4 },
+  ];
+
+  let best = Infinity;
+  for (const { text, weight } of fields) {
+    if (!text) continue;
+    const result = bitapSearch(text, q, maxErr);
+    if (result !== null) {
+      const s = (result.score + 1) * weight; // errors=0 is best
+      if (s < best) best = s;
+    }
+  }
+  return best;
+}
+
+function getFiltered() {
+  let entries = allEntries;
+
+  // Filter by tab
+  if (activeTab !== '__all__') {
+    entries = entries.filter(e => e.sheet === activeTab);
+  }
+
+  // Fuzzy filter + sort by score
+  if (searchQuery) {
+    const scored = entries
+      .map(e => ({ e, s: scoreEntry(e, searchQuery) }))
+      .filter(({ s }) => s !== Infinity);
+    scored.sort((a, b) => a.s - b.s);
+    entries = scored.map(({ e }) => e);
+  }
+
+  return entries;
+}
+
+function highlightText(text, query) {
+  if (!query || !text) return escapeHtml(text);
+
+  const q = normalise(query);
+  const qLen = q.length;
+  const maxErr = qLen <= 2 ? 0 : qLen <= 5 ? 1 : 2;
+
+  const normText = normalise(text);
+  const result = bitapSearch(normText, q, maxErr);
+
+  if (!result) return escapeHtml(text);
+
+  // Highlight the matched region in the *original* (unnormalised) text
+  const { matchStart, matchEnd } = result;
+  const before = escapeHtml(text.slice(0, matchStart));
+  const matched = escapeHtml(text.slice(matchStart, matchEnd));
+  const after  = escapeHtml(text.slice(matchEnd));
+  return `${before}<mark>${matched}</mark>${after}`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderResults() {
+  const filtered = getFiltered();
+  const tbody = document.getElementById('resultsBody');
+  const table = document.getElementById('resultsTable');
+  const emptyState = document.getElementById('emptyState');
+  const loadingState = document.getElementById('loadingState');
+  const filterInfo = document.getElementById('filterInfo');
+  const filteredCount = document.getElementById('filteredCount');
+
+  loadingState.style.display = 'none';
+
+  if (filtered.length === 0) {
+    table.style.display = 'none';
+    emptyState.style.display = '';
+    filterInfo.style.display = searchQuery || activeTab !== '__all__' ? '' : 'none';
+    filteredCount.textContent = '0';
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  table.style.display = '';
+
+  if (searchQuery || activeTab !== '__all__') {
+    filterInfo.style.display = '';
+    filteredCount.textContent = filtered.length;
+  } else {
+    filterInfo.style.display = 'none';
+  }
+
+  // Render only first 500 for performance
+  const toRender = filtered.slice(0, 500);
+  const q = searchQuery;
+
+  tbody.innerHTML = toRender.map(e => `
+    <tr>
+      <td class="col-original" data-label="Original">${highlightText(e.original, q)}</td>
+      <td class="col-traducao" data-label="Tradução">${highlightText(e.traducao, q)}</td>
+      <td class="col-info" data-label="Info">${highlightText(e.info, q)}</td>
+      <td class="col-filiacao" data-label="Filiação">${highlightText(e.filiacao, q)}</td>
+      <td class="col-fonte" data-label="Fonte">${highlightText(e.fonte, q)}</td>
+      <td class="col-aba" data-label="Aba"><span class="aba-tag">${escapeHtml(e.sheet)}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ─── Toast ───
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── Add term via Apps Script ───
+async function submitNewTerm() {
+  if (!CONFIG.APPS_SCRIPT_URL) {
+    showToast('Configure a URL do Apps Script primeiro.', 'error');
+    return;
+  }
+
+  const payload = {
+    sheet: document.getElementById('formSheet').value,
+    original: document.getElementById('formOriginal').value.trim(),
+    traducao: document.getElementById('formTraducao').value.trim(),
+    info: document.getElementById('formInfo').value.trim(),
+    filiacao: document.getElementById('formFiliacao').value.trim(),
+    fonte: document.getElementById('formFonte').value.trim(),
+  };
+
+  if (!payload.original) {
+    showToast('Preencha ao menos o campo Original.', 'error');
+    return;
+  }
+
+  try {
+    document.getElementById('btnSubmitAdd').disabled = true;
+    document.getElementById('btnSubmitAdd').textContent = 'Salvando…';
+
+    // Apps Script requires a "simple" CORS request to avoid a preflight that
+    // it cannot respond to. Omitting the Content-Type header (letting the
+    // browser default to text/plain) prevents the preflight while still
+    // delivering the full JSON body in e.postData.contents on the server.
+    const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+
+    // Apps Script returns JSON with { success: true/false }
+    let result = { success: true };
+    try {
+      result = await res.json();
+    } catch (_) {
+      // opaque / non-JSON response — treat as success if HTTP was ok
+      if (!res.ok) result = { success: false, error: `HTTP ${res.status}` };
+    }
+
+    if (!result.success) throw new Error(result.error || 'Resposta inesperada do servidor');
+
+    // Add locally for immediate display
+    allEntries.push({ ...payload });
+    document.getElementById('totalCount').textContent = allEntries.length;
+
+    closeModal('addModal');
+    renderResults();
+    showToast('Termo adicionado com sucesso!');
+
+    // Clear form
+    ['formOriginal', 'formTraducao', 'formInfo', 'formFiliacao', 'formFonte'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  } catch (err) {
+    showToast('Erro ao salvar: ' + err.message, 'error');
+  } finally {
+    document.getElementById('btnSubmitAdd').disabled = false;
+    document.getElementById('btnSubmitAdd').textContent = 'Salvar';
+  }
+}
+
+// ─── Modals ───
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ─── Add button state ───
+function updateAddButton() {
+  const btn = document.getElementById('btnAdd');
+  const canAdd = !!CONFIG.APPS_SCRIPT_URL;
+  btn.disabled = !canAdd;
+  btn.title = canAdd ? 'Adicionar novo termo' : 'Configure a URL do Apps Script (⚙) para habilitar o cadastro';
+}
+
+// ─── Load glossary (called after sign-in) ───
+async function loadGlossary() {
+  const loadingState = document.getElementById('loadingState');
+  const errorState = document.getElementById('errorState');
+  const configBanner = document.getElementById('configBanner');
+
+  updateAddButton();
+  loadingState.style.display = '';
+  errorState.style.display = 'none';
+  document.getElementById('resultsTable').style.display = 'none';
+
+  if (!CONFIG.SPREADSHEET_ID) {
+    loadingState.style.display = 'none';
+    configBanner.style.display = 'block';
+    errorState.style.display = '';
+    document.getElementById('errorMsg').textContent =
+      'Configure o Spreadsheet ID clicando em ⚙ no cabeçalho.';
+    return;
+  }
+
+  try {
+    await fetchAllSheets();
+    document.getElementById('totalCount').textContent = allEntries.length;
+    document.getElementById('sheetCount').textContent = sheetNames.length;
+    renderTabs();
+    renderResults();
+
+    const sel = document.getElementById('formSheet');
+    sel.innerHTML = sheetNames.map(n => `<option value="${n}">${n}</option>`).join('');
+  } catch (err) {
+    loadingState.style.display = 'none';
+    errorState.style.display = '';
+    document.getElementById('errorMsg').textContent = err.message;
+  }
+}
+
+// ─── Init ───
+function init() {
+  loadTheme();
+  updateAddButton();
+
+  // ── Offline mode (file://) ──────────────────────────────────
+  // Skip OAuth entirely. Load the spreadsheet with the API key
+  // (read-only). Hide the login screen and the "New Term" button.
+  if (location.protocol === 'file:') {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('btnAdd').style.display = 'none';
+    loadGlossary();
+    return;
+  }
+
+  // ── Online mode ─────────────────────────────────────────────
+  // Add login error placeholder
+  const loginCard = document.querySelector('.login-card');
+  const errEl = document.createElement('p');
+  errEl.id = 'loginError';
+  errEl.style.cssText = 'color:var(--accent-red);font-size:0.8rem;margin-top:0.8rem;display:none';
+  loginCard.appendChild(errEl);
+
+  // Wait for the GIS library to be ready, then initialise
+  if (typeof google !== 'undefined' && google.accounts) {
+    initGoogleAuth();
+  } else {
+    // GIS loads async — poll briefly
+    const poll = setInterval(() => {
+      if (typeof google !== 'undefined' && google.accounts) {
+        clearInterval(poll);
+        initGoogleAuth();
+      }
+    }, 100);
+  }
+}
+
+// ─── Event listeners ───
+function openConfigModal() {
+  document.getElementById('cfgSpreadsheetId').value = CONFIG.SPREADSHEET_ID;
+  document.getElementById('cfgClientId').value = CONFIG.OAUTH_CLIENT_ID;
+  document.getElementById('cfgApiKey').value = CONFIG.API_KEY;
+  document.getElementById('cfgAppsScript').value = CONFIG.APPS_SCRIPT_URL;
+  // Mark active theme swatch
+  applyTheme(CONFIG.THEME || 'golden');
+  openModal('configModal');
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim();
+  renderResults();
+});
+
+document.getElementById('tabsRow').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  activeTab = btn.dataset.tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderResults();
+});
+
+document.getElementById('btnSignIn').addEventListener('click', requestToken);
+document.getElementById('btnSignOut').addEventListener('click', signOut);
+document.getElementById('btnConfigFromLogin').addEventListener('click', () => {
+  openConfigModal();
+});
+
+document.getElementById('btnAdd').addEventListener('click', () => openModal('addModal'));
+document.getElementById('btnCancelAdd').addEventListener('click', () => closeModal('addModal'));
+document.getElementById('btnSubmitAdd').addEventListener('click', submitNewTerm);
+
+document.getElementById('btnConfig').addEventListener('click', () => {
+  openConfigModal();
+});
+document.getElementById('btnCancelConfig').addEventListener('click', () => {
+  // Revert any live theme preview to the saved theme
+  applyTheme(CONFIG.THEME || 'golden');
+  closeModal('configModal');
+});
+document.getElementById('btnSaveConfig').addEventListener('click', () => {
+  const activeSwatchEl = document.querySelector('.theme-swatch.active');
+  const selectedTheme = activeSwatchEl ? activeSwatchEl.dataset.theme : (CONFIG.THEME || 'golden');
+  saveConfig({
+    SPREADSHEET_ID: document.getElementById('cfgSpreadsheetId').value.trim(),
+    OAUTH_CLIENT_ID: document.getElementById('cfgClientId').value.trim(),
+    API_KEY: document.getElementById('cfgApiKey').value.trim(),
+    APPS_SCRIPT_URL: document.getElementById('cfgAppsScript').value.trim(),
+    THEME: selectedTheme,
+  });
+  updateAddButton();
+  closeModal('configModal');
+  location.reload();
+});
+
+// Theme picker — live preview on hover, commit on click
+document.getElementById('themePicker').addEventListener('click', (e) => {
+  const swatch = e.target.closest('.theme-swatch');
+  if (!swatch) return;
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+  swatch.classList.add('active');
+  applyTheme(swatch.dataset.theme);
+});
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      if (overlay.id === 'configModal') applyTheme(CONFIG.THEME || 'golden');
+      closeModal(overlay.id);
+    }
+  });
+});
+
+// Keyboard shortcut: / to focus search, Esc to close modals
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+  if (e.key === 'Escape') {
+    const openModals = document.querySelectorAll('.modal-overlay.open');
+    openModals.forEach(m => {
+      if (m.id === 'configModal') applyTheme(CONFIG.THEME || 'golden');
+      closeModal(m.id);
+    });
+  }
+});
+
+init();
+</script>
+</body>
+</html>
