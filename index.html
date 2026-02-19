@@ -1793,7 +1793,10 @@ async function submitNewTerm() {
       payload.filiacao,
       payload.fonte,
     ];
-    const range = encodeURIComponent(`'${payload.sheet}'`);
+    // The Sheets API expects the range in the URL without surrounding single-quotes.
+    // Single-quotes are only needed in the A1 notation when used as a query param or
+    // in the batch API, not in the REST path. Encoding the bare sheet name is enough.
+    const range = encodeURIComponent(payload.sheet);
     const res = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
       {
