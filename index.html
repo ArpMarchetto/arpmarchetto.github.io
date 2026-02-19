@@ -1760,13 +1760,28 @@ async function submitNewTerm() {
     fonte: document.getElementById('formFonte').value.trim(),
   };
 
+  if (!payload.sheet) {
+    showToast('Nenhuma aba disponível. Recarregue a página e tente novamente.', 'error');
+    return;
+  }
+
   if (!payload.original) {
     showToast('Preencha ao menos o campo Original.', 'error');
     return;
   }
 
+  if (!CONFIG.SPREADSHEET_ID) {
+    showToast('Spreadsheet ID não configurado. Clique em ⚙ para configurar.', 'error');
+    return;
+  }
+
   if (!accessToken) {
     showToast('Não autenticado. Faça login novamente.', 'error');
+    return;
+  }
+
+  if (!tokenClient && !CONFIG.OAUTH_CLIENT_ID) {
+    showToast('OAuth Client ID não configurado. Clique em ⚙ para configurar.', 'error');
     return;
   }
 
@@ -1783,6 +1798,7 @@ async function submitNewTerm() {
       `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
       {
         method: 'POST',
+        mode: 'cors',
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -1793,6 +1809,22 @@ async function submitNewTerm() {
     return res;
   };
 
+  // Refresh the access token with a timeout to avoid hanging silently
+  const refreshToken = () => new Promise((resolve, reject) => {
+    if (!tokenClient) { reject(new Error('OAuth não configurado. Verifique o Client ID nas configurações (⚙).')); return; }
+    const timer = setTimeout(() => reject(new Error('Tempo esgotado ao renovar o token. Faça logout e login novamente.')), 15000);
+    const origCallback = tokenClient.callback;
+    tokenClient.callback = (response) => {
+      clearTimeout(timer);
+      tokenClient.callback = origCallback;
+      if (response.error) { reject(new Error('Falha ao renovar token: ' + response.error)); return; }
+      accessToken = response.access_token;
+      resolve();
+    };
+    // prompt: '' = silent refresh if possible; falls back to consent popup
+    tokenClient.requestAccessToken({ prompt: '' });
+  });
+
   try {
     document.getElementById('btnSubmitAdd').disabled = true;
     document.getElementById('btnSubmitAdd').textContent = 'Salvando…';
@@ -1801,17 +1833,7 @@ async function submitNewTerm() {
 
     // Token expired or scope was readonly — silently refresh and retry once
     if ((res.status === 401 || res.status === 403) && tokenClient) {
-      await new Promise((resolve, reject) => {
-        const origCallback = tokenClient.callback;
-        tokenClient.callback = (response) => {
-          tokenClient.callback = origCallback;
-          if (response.error) { reject(new Error(response.error)); return; }
-          accessToken = response.access_token;
-          resolve();
-        };
-        // prompt: '' = silent refresh if possible; falls back to consent popup
-        tokenClient.requestAccessToken({ prompt: '' });
-      });
+      await refreshToken();
       res = await doAppend();
     }
 
@@ -1835,7 +1857,16 @@ async function submitNewTerm() {
       document.getElementById(id).value = '';
     });
   } catch (err) {
-    showToast('Erro ao salvar: ' + err.message, 'error');
+    // TypeError: Failed to fetch / Load failed  →  CORS or network issue
+    const isNetworkError = err instanceof TypeError;
+    if (isNetworkError) {
+      showToast(
+        'Erro de rede ao salvar. Verifique se o domínio está listado nas "Authorized JavaScript Origins" do OAuth Client ID no Google Cloud Console.',
+        'error'
+      );
+    } else {
+      showToast('Erro ao salvar: ' + err.message, 'error');
+    }
   } finally {
     document.getElementById('btnSubmitAdd').disabled = false;
     document.getElementById('btnSubmitAdd').textContent = 'Salvar';
