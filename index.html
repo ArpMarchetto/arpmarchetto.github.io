@@ -1425,11 +1425,23 @@ function initGoogleAuth() {
     scope: 'https://www.googleapis.com/auth/spreadsheets',
     callback: (response) => {
       if (response.error) {
+        // If a write was pending, restore the button and show the error
+        if (_pendingTermPayload) {
+          _pendingTermPayload = null;
+          const btn = document.getElementById('btnSubmitAdd');
+          if (btn) { btn.disabled = false; btn.textContent = 'Salvar'; }
+        }
         showLoginError('Falha ao autenticar: ' + response.error);
         return;
       }
-      accessToken = response.access_token;
-      onSignedIn();
+      if (_pendingTermPayload) {
+        // Token arrived because submitNewTerm requested it — go write
+        _onTokenForWrite(response.access_token);
+      } else {
+        // Token arrived from the sign-in button — proceed to load glossary
+        accessToken = response.access_token;
+        onSignedIn();
+      }
     },
   });
 }
@@ -1767,131 +1779,119 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ─── Add term via Apps Script ───
-async function submitNewTerm() {
+// ─── Add term ───
+// Guarda o payload entre o clique do botão e o callback do token,
+// para que o requestAccessToken seja sempre chamado dentro do gesto
+// direto do usuário (evita bloqueio de popup pelo browser).
+let _pendingTermPayload = null;
+
+async function _doAppend(payload) {
+  const row = [
+    payload.original,
+    payload.traducao,
+    payload.info,
+    payload.filiacao,
+    payload.fonte,
+  ];
+  // Sheets API REST path: bare sheet name, no surrounding single-quotes.
+  const range = encodeURIComponent(payload.sheet);
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ values: [row] }),
+    }
+  );
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const msg = body?.error?.message || `HTTP ${res.status}`;
+    if (res.status === 401) throw new Error(`Token inválido ou expirado (401). Faça logout e login novamente. Detalhe: ${msg}`);
+    if (res.status === 403) throw new Error(`Sem permissão de escrita (403). Verifique: (1) sua conta tem acesso de Editor na planilha, (2) a Sheets API está habilitada no Google Cloud Console. Detalhe: ${msg}`);
+    throw new Error(`Erro HTTP ${res.status}: ${msg}`);
+  }
+
+  // Add locally for immediate display
+  allEntries.push({ ...payload });
+  document.getElementById('totalCount').textContent = allEntries.length;
+  closeModal('addModal');
+  renderResults();
+  showToast('Termo adicionado com sucesso!');
+  ['formOriginal', 'formTraducao', 'formInfo', 'formFiliacao', 'formFonte'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function submitNewTerm() {
   const payload = {
-    sheet: document.getElementById('formSheet').value,
+    sheet:    document.getElementById('formSheet').value,
     original: document.getElementById('formOriginal').value.trim(),
     traducao: document.getElementById('formTraducao').value.trim(),
-    info: document.getElementById('formInfo').value.trim(),
+    info:     document.getElementById('formInfo').value.trim(),
     filiacao: document.getElementById('formFiliacao').value.trim(),
-    fonte: document.getElementById('formFonte').value.trim(),
+    fonte:    document.getElementById('formFonte').value.trim(),
   };
 
   if (!payload.sheet) {
     showToast('Nenhuma aba disponível. Recarregue a página e tente novamente.', 'error');
     return;
   }
-
   if (!payload.original) {
     showToast('Preencha ao menos o campo Original.', 'error');
     return;
   }
-
   if (!CONFIG.SPREADSHEET_ID) {
     showToast('Spreadsheet ID não configurado. Clique em ⚙ para configurar.', 'error');
     return;
   }
-
-  if (!accessToken) {
-    showToast('Não autenticado. Faça login novamente.', 'error');
-    return;
-  }
-
-  if (!tokenClient && !CONFIG.OAUTH_CLIENT_ID) {
+  if (!tokenClient) {
     showToast('OAuth Client ID não configurado. Clique em ⚙ para configurar.', 'error');
     return;
   }
 
-  const doAppend = async () => {
-    const row = [
-      payload.original,
-      payload.traducao,
-      payload.info,
-      payload.filiacao,
-      payload.fonte,
-    ];
-    // The Sheets API expects the range in the URL without surrounding single-quotes.
-    // Single-quotes are only needed in the A1 notation when used as a query param or
-    // in the batch API, not in the REST path. Encoding the bare sheet name is enough.
-    const range = encodeURIComponent(payload.sheet);
-    const res = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SPREADSHEET_ID}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
-      {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ values: [row] }),
-      }
-    );
-    return res;
-  };
+  const btn = document.getElementById('btnSubmitAdd');
+  btn.disabled = true;
+  btn.textContent = 'Salvando…';
 
-  // Refresh the access token with a timeout to avoid hanging silently
-  const refreshToken = () => new Promise((resolve, reject) => {
-    if (!tokenClient) { reject(new Error('OAuth não configurado. Verifique o Client ID nas configurações (⚙).')); return; }
-    const timer = setTimeout(() => reject(new Error('Tempo esgotado ao renovar o token. Faça logout e login novamente.')), 15000);
-    const origCallback = tokenClient.callback;
-    tokenClient.callback = (response) => {
-      clearTimeout(timer);
-      tokenClient.callback = origCallback;
-      if (response.error) { reject(new Error('Falha ao renovar token: ' + response.error)); return; }
-      accessToken = response.access_token;
-      resolve();
-    };
-    // prompt: '' = silent refresh if possible; falls back to consent popup
-    tokenClient.requestAccessToken({ prompt: '' });
-  });
+  // Store payload so the token callback can use it
+  _pendingTermPayload = payload;
 
+  // Always request a fresh token directly from the user gesture (click).
+  // prompt: '' attempts silent refresh first; only shows popup if needed.
+  // This MUST be called synchronously inside the click handler to avoid
+  // browser popup blockers.
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+// Called by the tokenClient callback (set up in initGoogleAuth) whenever
+// a new token arrives — either from the initial sign-in or from the
+// silent refresh triggered by submitNewTerm.
+async function _onTokenForWrite(token) {
+  accessToken = token;
+
+  if (!_pendingTermPayload) return; // token arrived from sign-in, not from write
+  const payload = _pendingTermPayload;
+  _pendingTermPayload = null;
+
+  const btn = document.getElementById('btnSubmitAdd');
   try {
-    document.getElementById('btnSubmitAdd').disabled = true;
-    document.getElementById('btnSubmitAdd').textContent = 'Salvando…';
-
-    let res = await doAppend();
-
-    // Token expired or scope was readonly — silently refresh and retry once
-    if ((res.status === 401 || res.status === 403) && tokenClient) {
-      await refreshToken();
-      res = await doAppend();
-    }
-
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      const msg = body?.error?.message || `HTTP ${res.status}`;
-      if (res.status === 401) throw new Error(`Token inválido ou expirado (401). Faça logout e login novamente. Detalhe: ${msg}`);
-      if (res.status === 403) throw new Error(`Sem permissão de escrita (403). Verifique: (1) sua conta tem acesso de Editor na planilha, (2) a Sheets API está habilitada no Google Cloud Console. Detalhe: ${msg}`);
-      throw new Error(`Erro HTTP ${res.status}: ${msg}`);
-    }
-
-    // Add locally for immediate display
-    allEntries.push({ ...payload });
-    document.getElementById('totalCount').textContent = allEntries.length;
-
-    closeModal('addModal');
-    renderResults();
-    showToast('Termo adicionado com sucesso!');
-
-    // Clear form
-    ['formOriginal', 'formTraducao', 'formInfo', 'formFiliacao', 'formFonte'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
+    await _doAppend(payload);
   } catch (err) {
-    // TypeError: Failed to fetch / Load failed  →  CORS or network issue
     const isNetworkError = err instanceof TypeError;
-    if (isNetworkError) {
-      showToast(
-        'Erro de rede ao salvar. Verifique se o domínio está listado nas "Authorized JavaScript Origins" do OAuth Client ID no Google Cloud Console.',
-        'error'
-      );
-    } else {
-      showToast('Erro ao salvar: ' + err.message, 'error');
-    }
+    showToast(
+      isNetworkError
+        ? 'Erro de rede ao salvar. Verifique as Authorized JavaScript Origins no Google Cloud Console.'
+        : 'Erro ao salvar: ' + err.message,
+      'error'
+    );
   } finally {
-    document.getElementById('btnSubmitAdd').disabled = false;
-    document.getElementById('btnSubmitAdd').textContent = 'Salvar';
+    btn.disabled = false;
+    btn.textContent = 'Salvar';
   }
 }
 
