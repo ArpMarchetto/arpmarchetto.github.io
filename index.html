@@ -1423,6 +1423,9 @@ function initGoogleAuth() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CONFIG.OAUTH_CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/spreadsheets',
+    // Disable scope accumulation from previous sessions — always request
+    // the full scope explicitly so the token is never downgraded.
+    include_granted_scopes: false,
     callback: (response) => {
       if (response.error) {
         // If a write was pending, restore the button and show the error
@@ -1451,7 +1454,9 @@ function requestToken() {
     showLoginError('OAuth Client ID não configurado. Clique em ⚙ no cabeçalho para configurar.');
     return;
   }
-  tokenClient.requestAccessToken({ prompt: 'select_account' });
+  // prompt: 'consent' forces Google to show the account picker and grant
+  // screen, ensuring the token always includes the write scope.
+  tokenClient.requestAccessToken({ prompt: 'consent' });
 }
 
 function showLoginError(msg) {
@@ -1861,11 +1866,11 @@ function submitNewTerm() {
   // Store payload so the token callback can use it
   _pendingTermPayload = payload;
 
-  // Always request a fresh token directly from the user gesture (click).
-  // prompt: '' attempts silent refresh first; only shows popup if needed.
-  // This MUST be called synchronously inside the click handler to avoid
-  // browser popup blockers.
-  tokenClient.requestAccessToken({ prompt: '' });
+  // Request a fresh token directly from the user gesture (click) so the
+  // browser never blocks it as an unsolicited popup.
+  // prompt: 'consent' ensures Google always grants the full write scope,
+  // bypassing any cached read-only token from a previous session.
+  tokenClient.requestAccessToken({ prompt: 'consent' });
 }
 
 // Called by the tokenClient callback (set up in initGoogleAuth) whenever
