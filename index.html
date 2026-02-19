@@ -687,7 +687,7 @@
     inset: 0;
     background: rgba(20, 12, 4, 0.65);
     backdrop-filter: blur(2px);
-    z-index: 200;
+    z-index: 600;
     justify-content: center;
     align-items: center;
     padding: 2rem;
@@ -1222,8 +1222,14 @@
       <input type="text" id="cfgSpreadsheetId" placeholder="1ueMQ7axeZgiT9fwwUXX6S9pa9jwnkCQn">
     </div>
     <div class="form-group">
-      <label>OAuth Client ID <span style="font-size:0.7rem;font-weight:normal;color:var(--ink-muted)">(modo online)</span></label>
+      <label>OAuth Client ID <span style="font-size:0.7rem;font-weight:normal;color:var(--ink-muted)">(login + escrita)</span></label>
       <input type="text" id="cfgClientId" placeholder="xxxx.apps.googleusercontent.com">
+      <p style="font-size:0.72rem;color:var(--ink-muted);margin-top:0.35rem;line-height:1.5">
+        Necessário para login e cadastro de termos. No Google Cloud Console, certifique-se de que a
+        <strong>Google Sheets API</strong> está habilitada e que
+        <code style="font-size:0.72rem">https://arpmarchetto.github.io</code>
+        está nas <em>Authorized JavaScript origins</em>.
+      </p>
     </div>
     <div class="form-group">
       <label>Google API Key <span style="font-size:0.7rem;font-weight:normal;color:var(--ink-muted)">(modo offline / file://)</span></label>
@@ -1386,7 +1392,19 @@ let accessToken = null;     // OAuth access token (in-memory only, never stored)
 function loadConfig() {
   try {
     const saved = localStorage.getItem('glossario_dc_config');
-    if (saved) return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Migrate: remove obsolete keys from previous versions (e.g. APPS_SCRIPT_URL)
+      const { SPREADSHEET_ID, OAUTH_CLIENT_ID, API_KEY, THEME } = parsed;
+      const migrated = {
+        ...DEFAULT_CONFIG,
+        ...(SPREADSHEET_ID  !== undefined && { SPREADSHEET_ID }),
+        ...(OAUTH_CLIENT_ID !== undefined && { OAUTH_CLIENT_ID }),
+        ...(API_KEY          !== undefined && { API_KEY }),
+        ...(THEME            !== undefined && { THEME }),
+      };
+      return migrated;
+    }
   } catch (e) {}
   return { ...DEFAULT_CONFIG };
 }
@@ -1843,8 +1861,9 @@ async function submitNewTerm() {
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
       const msg = body?.error?.message || `HTTP ${res.status}`;
-      if (res.status === 403) throw new Error(`Sem permissão de escrita. Certifique-se de que a sua conta tem acesso de Editor. Detalhe: ${msg}`);
-      throw new Error(msg);
+      if (res.status === 401) throw new Error(`Token inválido ou expirado (401). Faça logout e login novamente. Detalhe: ${msg}`);
+      if (res.status === 403) throw new Error(`Sem permissão de escrita (403). Verifique: (1) sua conta tem acesso de Editor na planilha, (2) a Sheets API está habilitada no Google Cloud Console. Detalhe: ${msg}`);
+      throw new Error(`Erro HTTP ${res.status}: ${msg}`);
     }
 
     // Add locally for immediate display
@@ -2008,12 +2027,18 @@ document.getElementById('btnCancelConfig').addEventListener('click', () => {
 document.getElementById('btnSaveConfig').addEventListener('click', () => {
   const activeSwatchEl = document.querySelector('.theme-swatch.active');
   const selectedTheme = activeSwatchEl ? activeSwatchEl.dataset.theme : (CONFIG.THEME || 'golden');
+  const newClientId = document.getElementById('cfgClientId').value.trim();
+  const clientIdChanged = newClientId !== CONFIG.OAUTH_CLIENT_ID;
   saveConfig({
     SPREADSHEET_ID: document.getElementById('cfgSpreadsheetId').value.trim(),
-    OAUTH_CLIENT_ID: document.getElementById('cfgClientId').value.trim(),
+    OAUTH_CLIENT_ID: newClientId,
     API_KEY: document.getElementById('cfgApiKey').value.trim(),
     THEME: selectedTheme,
   });
+  // If Client ID changed, re-initialise the token client before reloading
+  if (clientIdChanged && typeof google !== 'undefined' && google.accounts) {
+    initGoogleAuth();
+  }
   updateAddButton();
   closeModal('configModal');
   location.reload();
